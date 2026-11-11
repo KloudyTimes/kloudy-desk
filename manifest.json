@@ -1,0 +1,12 @@
+{
+  "name": "Kloudy Desk",
+  "short_name": "Kloudy Desk",
+  "display": "standalone",
+  "background_color": "#bcc1c8",
+  "theme_color": "#bcc1c8",
+  "icons": [
+    {"src": "icons/icon-192-v20261118e.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512-v20261118e.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-maskable-512-v20261118e.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

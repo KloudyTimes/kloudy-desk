@@ -1,0 +1,161 @@
+/* Kloudy Desk · Kloud mode — puffy 3D toy clouds + animated bots (anim.js) */
+:root { --sky: #c9cdd2; --sky2: #e6e7e9; --bg-clouds: url("bg/clouds-light3d.webp?v=20261118f"); }
+@media (prefers-color-scheme: dark) {
+  :root { --sky: #131821; --sky2: #171b25; --bg-clouds: url("bg/clouds-dark3d.webp?v=20261118f"); }
+  .sky-drift { filter: brightness(1.16); }
+}
+.sky-drift { inset: -4% -5% -6% -5%; background-size: cover; background-position: center center; }
+
+/* bot avatars: black cloud, no disc; dark mode uses a soft glow for contrast */
+.botav { object-fit: contain; padding: 0; background: none; box-shadow: none; border-radius: 0; }
+
+/* chart card hosts the animation layer */
+.chartcard.kanim-host, .deskgrid.kanim-host { position: relative; }
+.kanim { position: absolute; inset: 0; pointer-events: none; z-index: 3; overflow: hidden; border-radius: inherit; contain: layout style; }
+.kcur { position: absolute; left: 0; top: 0; z-index: 1; will-change: transform; transform: translate3d(-100px,-100px,0); }
+.karrow { position: absolute; left: -2px; top: -2px; fill: var(--c); stroke: #fff; stroke-width: 1.3; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,.35)); }
+.kav { position: absolute; left: 10px; top: 10px; width: 22px; height: 22px; filter: drop-shadow(0 1px 2px rgba(0,0,0,.3)); }
+.kname { position: absolute; left: 33px; top: 15px; background: var(--c); color: #0b0d12; font: 800 9.5px/1 var(--font); padding: 3px 6px 3px; border-radius: 999px; white-space: nowrap; box-shadow: 0 2px 6px rgba(0,0,0,.18); }
+.kbub { position: absolute; left: 12px; top: -24px; max-width: 210px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  background: rgba(255,255,255,.96); color: #14171c; font: 700 11px/1 var(--font); padding: 5px 8px; border-radius: 10px 10px 10px 3px;
+  box-shadow: 0 4px 14px rgba(20,24,32,.18); border: 1.5px solid var(--c); opacity: 0; transform: translate3d(0,4px,0) scale(.92); transform-origin: 0 100%;
+  transition: opacity .28s ease, transform .28s cubic-bezier(.2,.9,.3,1.2); }
+.kbub.on { opacity: 1; transform: none; }
+.kbub.good { color: #0c8a55; }
+.kbub.bad { color: #c03445; }
+.kbub.idle { color: #5a5f68; font-weight: 600; }
+.kcur.kflip .kbub { left: auto; right: -6px; border-radius: 10px 10px 3px 10px; transform-origin: 100% 100%; }
+.kripple { position: absolute; left: -9px; top: -9px; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--c); opacity: 0; animation: kripple .65s ease-out forwards; }
+@keyframes kripple { 0% { transform: scale(.3); opacity: .9; } 100% { transform: scale(2.2); opacity: 0; } }
+
+/* buy / sell labels pinned to the real trade points */
+.kmarks { position: absolute; inset: 0; z-index: 2; }
+.kmark { position: absolute; left: 0; top: 0; }
+.kmark i { position: absolute; left: -4px; top: -4px; width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 3px rgba(255,255,255,.85); }
+.kmark span { position: absolute; left: 6px; bottom: 8px; white-space: nowrap; font: 800 10.5px/1 var(--font); color: #fff; background: currentColor; padding: 4px 7px; border-radius: 999px; box-shadow: 0 3px 10px rgba(0,0,0,.2); }
+.kmark span { background: none; }
+.kmark.buy { color: #17a46a; } .kmark.sell { color: #e0485a; }
+.kmark.buy span { background: #17a46a; } .kmark.sell span { background: #e0485a; }
+.kmark.left span { left: auto; right: 6px; }
+.kmark.below span { bottom: auto; top: 8px; }
+
+/* bot list rail: dashed connectors + travelling dots */
+.botlist.krailed { position: relative; padding-left: 14px; }
+.krail { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; z-index: 2; }
+.krail .kbus, .krail .kseg { fill: none; stroke: rgba(90,100,115,.42); stroke-width: 1.2; stroke-dasharray: 3 4; }
+.krail .knode { stroke: rgba(255,255,255,.9); stroke-width: 1.2; }
+.krail .kdot.faint { opacity: .6; }
+.botbadge.kcount { font-variant-numeric: tabular-nums; }
+
+/* pot flash */
+.hero-val.kflash-up { animation: kflashup 1.2s ease-out; }
+.hero-val.kflash-down { animation: kflashdown 1.2s ease-out; }
+@keyframes kflashup { 0% { text-shadow: 0 0 0 rgba(26,163,106,0); } 20% { text-shadow: 0 0 22px rgba(26,190,120,.85); transform: scale(1.03); } 100% { text-shadow: 0 0 0 rgba(26,163,106,0); transform: none; } }
+@keyframes kflashdown { 0% { text-shadow: 0 0 0 rgba(208,74,90,0); } 20% { text-shadow: 0 0 22px rgba(230,70,90,.85); transform: scale(1.03); } 100% { text-shadow: 0 0 0 rgba(208,74,90,0); transform: none; } }
+
+@media (prefers-color-scheme: dark) {
+  .kav, .botav { filter: drop-shadow(0 0 1.2px rgba(255,255,255,.7)) drop-shadow(0 1px 3px rgba(0,0,0,.35)); }
+  .kbub { background: rgba(14,17,24,.94); color: #eef1f5; box-shadow: 0 4px 14px rgba(0,0,0,.5); }
+  .kbub.good { color: #4ade9a; } .kbub.bad { color: #ff7b86; } .kbub.idle { color: #aab3bf; }
+  .kmark i { box-shadow: 0 0 0 3px rgba(10,12,18,.85); }
+  .krail .kbus, .krail .kseg { stroke: rgba(200,210,225,.32); }
+  .krail .knode { stroke: rgba(10,12,18,.9); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kbub { transition: opacity .2s linear; transform: none; }
+  .kripple { display: none; }
+  .hero-val.kflash-up, .hero-val.kflash-down { animation-duration: .01s; }
+}
+
+.deskgrid > .krail.kgrid-rail { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: visible; }
+.deskgrid > .kanim { z-index: 4; border-radius: 0; }
+
+.deskgrid .krail .kseg { stroke-width: 1.35; stroke-dasharray: 3 3; }
+@media (prefers-color-scheme: dark) {
+  .deskgrid .krail .kseg { stroke: rgba(210,220,235,.5); }
+}
+
+/* work cursors: rest in a lane, playful grab / hop / toss, CSS-only idle bob */
+.kcur .kbody { transform-origin: 8px 8px; will-change: transform; }
+.kcur.kidle .kbody { animation: kbob 2.6s ease-in-out infinite; }
+.kcur.kgrab .kbody { animation: kgrab .34s cubic-bezier(.2,1.5,.3,1); }
+.kcur.ktoss .kbody { animation: ktoss .48s ease-in-out; }
+.kcur.khop .kbody { animation: khop .44s cubic-bezier(.2,1.6,.3,1); }
+@keyframes kbob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes kgrab {
+  0% { transform: scale(1,1); }
+  40% { transform: scale(1.28,.68); }
+  70% { transform: scale(.82,1.22); }
+  100% { transform: scale(1,1); }
+}
+@keyframes ktoss {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-22deg) translate(3px,-2px); }
+  55% { transform: rotate(18deg) translate(-2px,1px); }
+  75% { transform: rotate(-8deg); }
+}
+@keyframes khop {
+  0%, 100% { transform: translateY(0) scale(1,1); }
+  40% { transform: translateY(-13px) scale(.94,1.1); }
+  70% { transform: translateY(2px) scale(1.08,.9); }
+}
+.kchip {
+  position: absolute; left: 0; top: 0; z-index: 5; pointer-events: none;
+  font: 800 10px/1 var(--font); color: #14171c; background: #fff;
+  border: 1.5px solid #111; border-radius: 999px; padding: 4px 7px;
+  box-shadow: 0 3px 8px rgba(0,0,0,.22); white-space: nowrap;
+  will-change: transform, opacity;
+}
+.kcur .kchip { left: 16px; top: 20px; }
+.kbuy {
+  position: absolute; left: 50%; top: 46%; z-index: 6; pointer-events: none;
+  transform: translate(-50%,-50%) scale(.7); opacity: 0;
+  font: 800 18px/1 var(--font); color: #fff; background: #17a46a;
+  padding: 8px 14px; border-radius: 999px; box-shadow: 0 8px 24px rgba(23,164,106,.45);
+  animation: kbuypop .9s cubic-bezier(.2,1.5,.3,1) forwards;
+}
+@keyframes kbuypop {
+  0% { transform: translate(-50%,-50%) scale(.5) rotate(-8deg); opacity: 0; }
+  35% { transform: translate(-50%,-58%) scale(1.12) rotate(3deg); opacity: 1; }
+  70% { transform: translate(-50%,-50%) scale(1) rotate(0); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(.96); opacity: 0; }
+}
+@media (prefers-color-scheme: dark) {
+  .kchip { background: #171b24; color: #eef1f5; border-color: #eef1f5; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kcur.kidle .kbody, .kcur.kgrab .kbody, .kcur.ktoss .kbody, .kcur.khop .kbody, .kbuy { animation: none !important; }
+  .kbuy { opacity: 1; transform: translate(-50%,-50%); }
+}
+
+/* cute Kloudy trash: failed coins go here; also a drop target for a finger/mouse */
+.ktrash {
+  position: absolute; left: 0; top: 0; z-index: 6; width: 44px; height: 52px;
+  pointer-events: auto; transform-origin: 50% 80%;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,.28));
+  will-change: transform;
+}
+.ktrash svg { display: block; overflow: visible; }
+.ktrash .lid { transform-origin: 12px 11px; }
+.ktrash.kdrop .lid { animation: klid .48s cubic-bezier(.2,1.5,.3,1); }
+.ktrash.kready { transform: scale(1.08); }
+@keyframes klid {
+  0%, 100% { transform: rotate(0); }
+  28% { transform: rotate(-48deg) translateY(-2px); }
+  55% { transform: rotate(-16deg) translateY(1px); }
+  75% { transform: rotate(-10deg) translateY(-2px); }
+}
+.kchip { pointer-events: auto; cursor: grab; -webkit-user-select: none; user-select: none; }
+.kcur .kchip, .kchip.kheld { pointer-events: none; cursor: inherit; }
+.kchip.kdrag { cursor: grabbing; z-index: 9; filter: drop-shadow(0 6px 10px rgba(0,0,0,.3)); }
+@media (prefers-color-scheme: dark) {
+  .ktrash .body { fill: #1a1f28; stroke: #111; }
+  .ktrash { filter: drop-shadow(0 2px 4px rgba(0,0,0,.5)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ktrash.kdrop .lid { animation: none; }
+  .ktrash.kready { transform: none; }
+}
